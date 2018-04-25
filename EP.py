@@ -10,17 +10,30 @@ finally:
     with open('dados.json','r') as arquivo:
         texto = arquivo.read()  #texto é uma string
         estoque = json.loads(texto) #dic é um dicionario
+        
+        
+#mudar e criar arquivo de precos
+try:
+    with open('preco.json','r') as P_arquivo:
+        pass
+except IOError:
+    with open('preco.json','a') as P_arquivo:
+        P_arquivo.write('{}')
+finally:
+    with open('preco.json','r') as P_arquivo:
+        P_texto = P_arquivo.read()  #texto é uma string
+        P_estoque = json.loads(P_texto)
 
         
 
 def menu():
-    print()
-    print('Controle de estoque')
+    print('\nControle de estoque')
     print('0 - sair')
     print('1 - adicionar item')
     print('2 - remover item')
     print('3 - alterar item')
     print('4 - imprimir estoque')
+    print('5 - preco unitario')
 
     x = input('Faça sua escolha:')
     if x=='0':
@@ -33,6 +46,11 @@ def menu():
         alterar()
     elif x=='4':
         imprimir()
+    elif x=='5':
+        P_menu()
+    else:
+        print('\nOpcao invalida, tente denovo')
+        menu()
 
 def sair():
     print("Até mais")
@@ -75,5 +93,59 @@ def imprimir(): #Imprime o nome e a quantidade de cada produto
     for elemento in estoque.keys():
         print(elemento + ': ' + str(estoque[elemento]['quantidade']))
     menu()
+#Fucoes do preco
+def P_menu():
+    print('\nControle de precos')
+    print('0 - sair')
+    print('1 - adicionar preco')
+    print('2 - alterar preco')
+    print('3 - imprimir estoque')
+    x = input('Faça sua escolha:')
+    if x=='0':
+        P_sair()
+    elif x=='1':
+        P_adicionar()
+    elif x=='2':
+        P_alterar()
+    elif x=='3':
+        P_imprimir()
+    else:
+        print('\nOpcao invalida, tente denovo')
+        P_menu()
+        
+def P_sair():
+    print("Até mais")
+    P_original = json.dumps(P_estoque, sort_keys=True) #original volta a ser string
+    with open('preco.json','w') as P_arquivo:
+        P_arquivo.write(P_original)
+    menu()
+       
+def P_adicionar():
+    P_nome = input('Nome do produto: ')
+    if P_nome in P_estoque.keys():
+        print("Preco já está cadastrado.")
+    else:
+        prec = int(input('Preco Unitario: '))
+        while prec < 0:
+            print('O preco unitario não pode ser negativo.')
+            prec = input('Quantidade inicial: ')
+        P_estoque[P_nome]= {'Preco': prec}
+        P_menu()
+        
+def P_alterar():
+    #Se existir o produto mostra a quantidade e pede o valor a ser ADICIONADO  ao estoque, depois mostra o novo estoque
+    P_nome = input("Nome do produto: ")
+    if P_nome in P_estoque.keys():
+        valor= int(input('Preco: '))
+        P_estoque[P_nome]['Preco'] += valor
+        print('Novo estoque de ' + P_nome + ': ' + str(P_estoque[P_nome]['Preco']))
+    else:
+        print('Preco não encontrado')
+    P_menu()
+def P_imprimir():
+    for elemento in P_estoque.keys():
+        print(elemento + ': ' + str(P_estoque[elemento]['Preco']))
+    P_menu()
+    
     
 menu()
