@@ -1,9 +1,17 @@
 import json
 
-with open('dados.json','r') as arquivo:
-    texto = arquivo.read()  #texto é uma string
+try:
+    with open('dados.json','r') as arquivo:
+        pass
+except IOError:
+    with open('dados.json','a') as arquivo:
+        arquivo.write('{}')
+finally:
+    with open('dados.json','r') as arquivo:
+        texto = arquivo.read()  #texto é uma string
+        estoque = json.loads(texto) #dic é um dicionario
 
-estoque = json.loads(texto) #dic é um dicionario
+        
 
 def menu():
     print()
