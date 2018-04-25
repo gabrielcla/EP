@@ -5,23 +5,14 @@ try:
         pass
 except IOError:
     with open('dados.json','a') as arquivo:
-        arquivo.write('{}')
+        arquivo.write('{}\n{}')
 finally:
     with open('dados.json','r') as arquivo:
-        texto = arquivo.read()  #texto é uma string
-        estoque = json.loads(texto) #dic é um dicionario
-        
-        
-#mudar e criar arquivo de precos
-try:
-    with open('preco.json','r') as P_arquivo:
-        pass
-except IOError:
-    with open('preco.json','a') as P_arquivo:
-        P_arquivo.write('{}')
-finally:
-    with open('preco.json','r') as P_arquivo:
-        P_texto = P_arquivo.read()  #texto é uma string
+        texto = arquivo.readline()
+        P_texto=arquivo.readline()
+        #texto é uma string
+        estoque = json.loads(texto)
+        #dic é um dicionario
         P_estoque = json.loads(P_texto)
 
         
@@ -54,9 +45,12 @@ def menu():
 
 def sair():
     print("Até mais")
-    original = json.dumps(estoque, sort_keys=True) #original volta a ser string
+    original = json.dumps(estoque, sort_keys=True)
+    P_original = json.dumps(P_estoque, sort_keys=True)#original volta a ser string
     with open('dados.json','w') as arquivo:
        arquivo.write(original)
+       arquivo.write('\n')
+       arquivo.write(P_original)
 
 def adicionar():
     nome = input('Nome do produto: ')
@@ -115,9 +109,6 @@ def P_menu():
         
 def P_sair():
     print("Até mais")
-    P_original = json.dumps(P_estoque, sort_keys=True) #original volta a ser string
-    with open('preco.json','w') as P_arquivo:
-        P_arquivo.write(P_original)
     menu()
        
 def P_adicionar():
