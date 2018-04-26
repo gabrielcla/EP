@@ -22,7 +22,8 @@ def menu():
     print('2 - remover item')
     print('3 - alterar item')
     print('4 - imprimir estoque')
-    print('5 - Controle de precos')
+    print('5 - produtos em falta')
+    print('6 - Controle de precos')
     x = input('Faça sua escolha:')
     if x=='0':
         sair()
@@ -35,6 +36,8 @@ def menu():
     elif x=='4':
         imprimir()
     elif x=='5':
+        falta()        
+    elif x=='6':
         P_menu()
     else:
         print('\nOpcao invalida, tente denovo')
@@ -83,6 +86,15 @@ def alterar():
 def imprimir(): #Imprime o nome e a quantidade de cada produto
     for elemento in estoque.keys():
         print(elemento + ': ' + str(estoque[elemento]['quantidade']))
+    menu()
+    
+def falta():
+    print('\nProdutos em Falta:')
+    for produto in estoque:
+        if 'quantidade' not in estoque[produto]:
+            print(produto)
+        elif estoque[produto]['quantidade']==0:
+            print(produto)
     menu()
 #Fucoes do preco
 def P_menu():
