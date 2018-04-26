@@ -23,7 +23,8 @@ def menu():
     print('3 - alterar item')
     print('4 - imprimir estoque')
     print('5 - produtos em falta')
-    print('6 - Controle de precos')
+    print('6 - valor monetario total')
+    print('7 - controle de precos')
     x = input('Faça sua escolha:')
     if x=='0':
         sair()
@@ -36,8 +37,10 @@ def menu():
     elif x=='4':
         imprimir()
     elif x=='5':
-        falta()        
+        falta()
     elif x=='6':
+        total()        
+    elif x=='7':
         P_menu()
     else:
         print('\nOpcao invalida, tente denovo')
@@ -85,7 +88,8 @@ def alterar():
    
 def imprimir(): #Imprime o nome e a quantidade de cada produto
     for elemento in estoque.keys():
-        print(elemento + ': ' + str(estoque[elemento]['quantidade']))
+        if 'quantidade' in estoque[elemento]:
+            print(elemento + ': ' + str(estoque[elemento]['quantidade']))
     menu()
     
 def falta():
@@ -97,11 +101,22 @@ def falta():
             print(produto)
     menu()
 #Fucoes do preco
+def total():
+    total=0
+    for produto in estoque:
+        if 'quantidade' in estoque[produto] and 'Preco' in estoque [produto]:
+            total+=(estoque[produto]['quantidade']*estoque[produto]['Preco'])
+        else:
+            print('dados insuficientes:\no produto {0}, foi desconsiderado para o calculo\n'.format(produto))
+    print('\nvalor monetário total: {0}'.format(total))
+    menu()
+    
 def P_menu():
     print('\nControle de precos')
     print('0 - sair')
     print('1 - adicionar preco')
     print('2 - alterar preco')
+    print('3 - imprimir precos')
     x = input('Faça sua escolha:')
     if x=='0':
         P_sair()
@@ -109,6 +124,8 @@ def P_menu():
         P_adicionar()
     elif x=='2':
         P_alterar()
+    elif x=='3':
+        P_imprimir()
     else:
         print('\nOpcao invalida, tente denovo')
         P_menu()
@@ -141,6 +158,11 @@ def P_alterar():
         print('Novo estoque de ' + P_nome + ': ' + str(estoque[P_nome]['Preco']))
     else:
         print('Preco não encontrado')
+    P_menu()
+def P_imprimir(): #Imprime o nome e a quantidade de cada produto
+    for elemento in estoque.keys():
+        if 'Preco' in estoque[elemento]:
+            print(elemento + ': ' + str(estoque[elemento]['Preco']))
     P_menu()
 
     
