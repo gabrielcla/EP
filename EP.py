@@ -30,7 +30,7 @@ def l_sair():
         arquivo.write(original)
         
 def l_dicionar():
-    loja = input('Nome da loja: ')
+    loja = 'Loja-'+input('Nome da loja: ')
     if loja in estoque.keys():
         print("Loja já está cadastrado.\n")
         l_menu()
@@ -38,7 +38,7 @@ def l_dicionar():
     l_menu()
     
 def l_remover():
-    loja = input("Nome da loja: ")
+    loja = 'Loja-'+input("Nome da loja: ")
     if loja in estoque.keys():
         del estoque[loja]
         print('Produto excluido\n')
@@ -47,7 +47,7 @@ def l_remover():
     l_menu()
     
 def l_alterar():
-    loja = input("Nome da loja: ")
+    loja = 'Loja-'+input("Nome da loja: ")
     if loja in estoque.keys():
         menu(loja)        
     else:
