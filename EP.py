@@ -5,11 +5,56 @@ import os.path
 if os.path.exists('dados.json')==False: 
     with open('dados.json', 'w') as arquivo:
         arquivo.write('{}')
-
 with open('dados.json','r') as arquivo:
-    estoque = json.loads(arquivo.read()) 
+    estoque = json.loads(arquivo.read())
+def l_menu():
+    print('\nControle de lojas')
+    print('0 - sair')
+    print('1 - adicionar loja')
+    print('2 - remover loja')
+    print('3 - alterar estoque da loja')
+    x = input('Faça sua escolha:')
+    print()
+    if x=='0':
+        l_sair()
+    elif x=='1':
+        l_dicionar()
+    elif x=='2':
+        l_remover()
+    elif x=='3':
+        l_alterar()
+def l_sair():
+    print("Até mais")
+    original = json.dumps(estoque, sort_keys=True)
+    with open('dados.json','w') as arquivo:
+        arquivo.write(original)
+        
+def l_dicionar():
+    loja = input('Nome da loja: ')
+    if loja in estoque.keys():
+        print("Loja já está cadastrado.\n")
+        l_menu()
+    estoque[loja]={}
+    l_menu()
+    
+def l_remover():
+    loja = input("Nome da loja: ")
+    if loja in estoque.keys():
+        del estoque[loja]
+        print('Produto excluido\n')
+    else:
+        print("Elemento não encontrado\n")
+    l_menu()
+    
+def l_alterar():
+    loja = input("Nome da loja: ")
+    if loja in estoque.keys():
+        menu(loja)        
+    else:
+        print('Elemento não encontrado\n')
+ 
 ### => Menu Principal
-def menu():
+def menu(loja):
     print('\nControle de estoque')
     print('0 - sair')
     print('1 - adicionar item')
@@ -21,60 +66,59 @@ def menu():
     x = input('Faça sua escolha:')
     print()
     if x=='0':
-        sair()
+        sair(loja)
     elif x=='1':
-        adicionar()
+        adicionar(loja)
     elif x=='2':
-        remover()
+        remover(loja)
     elif x=='3':
-        alterar()
+        alterar(loja)
     elif x=='4':
-        imprimir()
+        imprimir(loja)
     elif x=='5':
-        falta()
+        falta(loja)
     elif x=='6':
-        total()        
+        total(loja)        
     else:
         print('\nOpcao invalida, tente denovo')
-        menu()
+        menu(loja)
 
-def sair(): #Salva o dicionário e sai
+def sair(loja): #Salva o dicionário e sai
     print("Até mais")
-    original = json.dumps(estoque, sort_keys=True)
-    with open('dados.json','w') as arquivo:
-       arquivo.write(original)
+    l_menu()
+    
        
-def adicionar():
+def adicionar(loja):
     nome = input('Nome do produto: ')
-    if nome in estoque.keys():
+    if nome in estoque[loja]:
         print("Produto já está cadastrado.\n")
-        menu()
+        menu(loja)
     else:
         quantidade = int(input('Quantidade inicial: '))
         while quantidade < 0:
             print('A quantidade inicial não pode ser negativa.')
             quantidade = int(input('Quantidade inicial: '))
-        estoque[nome]={'quantidade':quantidade}
+        estoque[loja][nome]={'quantidade':quantidade}
     
         prec = float(input('Preco Unitario: '))
         while prec < 0:
             print('O preço unitário não pode ser negativo.')
             prec = input('Preço: ')
-        estoque[nome]['Preco']= prec
-        menu()
+        estoque[loja][nome]['Preco']= prec
+        menu(loja)
         
-def remover():    #Se existir ele apaga, se não ele diz que não existe
+def remover(loja):    #Se existir ele apaga, se não ele diz que não existe
     nome = input("Nome do produto: ")
-    if nome in estoque.keys():
-        del estoque[nome]
+    if nome in estoque[loja].keys():
+        del estoque[loja][nome]
         print('Produto excluido\n')
     else:
         print("Elemento não encontrado\n")
-    menu()
+    menu(loja)
 
-def alterar():
+def alterar(loja):
     nome = input("Nome do produto: ")
-    if nome in estoque.keys():     
+    if nome in estoque[loja].keys():     
         print('->Menu Alterar<-')
         print('0 - Voltar')
         print('1 - Quantidade')
@@ -82,44 +126,44 @@ def alterar():
         x = input('Faça sua escolha:')
         print()
         if x=='0':
-            menu()
+            menu(loja)
         elif x=='1':              
             valor= int(input('Variação da quantidade: '))
-            estoque[nome]['quantidade'] += valor
-            print('Novo estoque de ' + nome + ': ' + str(estoque[nome]['quantidade']))
+            estoque[loja][nome]['quantidade'] += valor
+            print('Novo estoque de ' + nome + ': ' + str(estoque[loja][nome]['quantidade']))
         elif x=='2':
             valor=float(input('Novo preço: '))
-            estoque[nome]['Preco'] = valor
+            estoque[loja][nome]['Preco'] = valor
         else:
             print('Opção inválida')
     else:
         print('Elemento não encontrado\n')              
-    menu()
+    menu(loja)
    
-def imprimir(): #Imprime o nome e a quantidade de cada produto
+def imprimir(loja): #Imprime o nome e a quantidade de cada produto
     print('Produto| Quantidade| Preço')
-    for A in estoque.keys():
-        print(A + '| '+ str(estoque[A]['quantidade'])+ ' unidades | '+ str(estoque[A]['Preco'])+ ' reais')
+    for A in estoque[loja].keys():
+        print(A + '| '+ str(estoque[loja][A]['quantidade'])+ ' unidades | '+ str(estoque[loja][A]['Preco'])+ ' reais')
     print()
-    menu()
+    menu(loja)
     
-def falta():
+def falta(loja):
     print('\nProdutos em Falta:')
-    for produto in estoque:
-        if 'quantidade' not in estoque[produto]:
+    for produto in estoque[loja]:
+        if 'quantidade' not in estoque[loja][produto]:
             print(produto)
-        elif estoque[produto]['quantidade']<=0:
-            print('{0}:{1}'.format(produto,(estoque[produto]['quantidade'])))
-    menu()
+        elif estoque[loja][produto]['quantidade']<=0:
+            print('{0}:{1}'.format(produto,(estoque[loja][produto]['quantidade'])))
+    menu(loja)
     
-def total():
+def total(loja):
     total=0
-    for produto in estoque:
-        if 'quantidade' in estoque[produto] and 'Preco' in estoque [produto]:
-            total+=(estoque[produto]['quantidade']*estoque[produto]['Preco'])
+    for produto in estoque[loja]:
+        if 'quantidade' in estoque[loja][produto] and 'Preco' in estoque[loja][produto]:
+            total+=(estoque[loja][produto]['quantidade']*estoque[loja][produto]['Preco'])
         else:
             print('dados insuficientes:\no produto {0}, foi desconsiderado para o calculo\n'.format(produto))
     print('\nvalor monetário total: {0}'.format(total))
-    menu()
+    menu(loja)
 
-menu()
+l_menu()
