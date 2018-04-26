@@ -8,7 +8,6 @@ if os.path.exists('dados.json')==False:
 
 with open('dados.json','r') as arquivo:
     estoque = json.loads(arquivo.read()) 
-
 ### => Menu Principal
 def menu():
     print('\nControle de estoque')
@@ -19,7 +18,6 @@ def menu():
     print('4 - imprimir estoque')
     print('5 - produtos em falta')
     print('6 - valor monetario total')
-    print('7 - controle de precos')
     x = input('Faça sua escolha:')
     print()
     if x=='0':
@@ -36,8 +34,6 @@ def menu():
         falta()
     elif x=='6':
         total()        
-    elif x=='7':
-        pass
     else:
         print('\nOpcao invalida, tente denovo')
         menu()
@@ -112,8 +108,8 @@ def falta():
     for produto in estoque:
         if 'quantidade' not in estoque[produto]:
             print(produto)
-        elif estoque[produto]['quantidade']==0:
-            print(produto)
+        elif estoque[produto]['quantidade']<=0:
+            print('{0}:{1}'.format(produto,(estoque[produto]['quantidade'])))
     menu()
     
 def total():
